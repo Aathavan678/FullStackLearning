@@ -1,0 +1,673 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Country Management Dashboard</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+/* NAVBAR */
+
+.navbar {
+    height: 65px;
+    background: #172554;
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 25px;
+    gap: 20px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 10;
+}
+
+.logo {
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.profile {
+    margin-left: auto;
+    font-size: 14px;
+}
+
+/* SIDEBAR */
+
+.sidebar {
+    width: 250px;
+    background: #1e293b;
+    color: white;
+    position: fixed;
+    top: 65px;
+    bottom: 0;
+    left: 0;
+    padding: 20px 12px;
+    overflow-y: auto;
+}
+
+.menu-heading {
+    padding: 12px;
+    font-size: 12px;
+    color: #94a3b8;
+    text-transform: uppercase;
+}
+
+.menu-item {
+    padding: 13px 12px;
+    margin: 5px 0;
+    border-radius: 6px;
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+.menu-item:hover {
+    background: #334155;
+}
+
+/* CSS DROPDOWN */
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown summary {
+    list-style: none;
+    cursor: pointer;
+}
+
+.dropdown summary::-webkit-details-marker {
+    display: none;
+}
+
+.arrow {
+    float: right;
+}
+
+.submenu {
+    padding-left: 22px;
+}
+
+.submenu a {
+    font-size: 14px;
+    color: #cbd5e1;
+}
+
+/* MAIN CONTENT */
+
+.main {
+    margin-left: 250px;
+    margin-top: 65px;
+    padding: 30px;
+    min-height: calc(100vh - 65px);
+}
+
+.page-title {
+    font-size: 25px;
+    margin-bottom: 8px;
+}
+
+.description {
+    color: #64748b;
+    margin-bottom: 25px;
+}
+
+/* CARDS */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px #0000000c;
+}
+
+.card h3 {
+    color: #64748b;
+    font-size: 15px;
+    margin-bottom: 15px;
+}
+
+.card h1 {
+    font-size: 30px;
+    color: #1d4ed8;
+}
+
+/* FORMS */
+
+.panel {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px #0000000c;
+}
+
+.panel h3 {
+    margin-bottom: 20px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    outline: none;
+    font-size: 14px;
+    background: white;
+}
+
+input:focus, select:focus {
+    border-color: #2563eb;
+}
+
+.btn {
+    display: inline-block;
+    padding: 11px 20px;
+    border: none;
+    border-radius: 6px;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+    margin-top: 20px;
+    text-decoration: none;
+}
+
+/* TABLE */
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    margin-top: 15px;
+}
+
+th, td {
+    padding: 13px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+th {
+    background: #eff6ff;
+    color: #1e3a8a;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:700px) {
+    .sidebar {
+        width: 200px;
+    }
+
+    .main {
+        margin-left: 200px;
+        padding: 18px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .logo {
+        font-size: 17px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<header class="navbar">
+    <div class="logo">Country Management</div>
+    <div class="profile">Admin 👤</div>
+</header>
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+    <div class="menu-heading">Main Menu</div>
+
+    <a href="#dashboard" class="menu-item">🏠 Dashboard</a>
+
+    <details class="dropdown">
+        <summary class="menu-item">
+            👥 Users <span class="arrow">▼</span>
+        </summary>
+
+        <div class="submenu">
+            <a href="#addUser" class="menu-item">➕ Add User</a>
+            <a href="#viewUsers" class="menu-item" onclick="getUserData()">📋 View Users</a>
+        </div>
+    </details>
+
+    <details class="dropdown">
+        <summary class="menu-item">
+            ⚙️ Masters <span class="arrow">▼</span>
+        </summary>
+
+        <div class="submenu">
+            <a href="#country" class="menu-item">🌍 Country</a>
+            <a href="#city" class="menu-item">🏙️ City</a>
+            <a href="#mapping" class="menu-item">🔗 Country City Mapping</a>
+        </div>
+    </details>
+
+</aside>
+
+<!-- MAIN CONTENT -->
+
+<main class="main">
+
+    <!-- DASHBOARD -->
+
+    <section id="dashboard">
+        <h2 class="page-title">Dashboard</h2>
+        <p class="description">Welcome to Country Management System</p>
+
+        <div class="cards">
+            <div class="card">
+                <h3>Total Users</h3>
+                <h1>0</h1>
+            </div>
+
+            <div class="card">
+                <h3>Total Countries</h3>
+                <h1>0</h1>
+            </div>
+
+            <div class="card">
+                <h3>Total Cities</h3>
+                <h1>0</h1>
+            </div>
+
+            <div class="card">
+                <h3>Total Mappings</h3>
+                <h1>0</h1>
+            </div>
+        </div>
+    </section>
+
+    <!-- ADD USER -->
+
+    <section id="addUser">
+        <h2 class="page-title">Add User</h2>
+        <p class="description">Enter user details below</p>
+
+        <div class="panel">
+            <h3>User Information</h3>
+
+            <form action="http://127.0.0.1:8080/country/PostUserDatas"
+          method="POST">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" name="age" min="1" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" name="dob" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">SELECT COUNTRY:</label>
+                        <select name="countryid" onclick="loadcity()" id="country">
+                            <option value="">Select Country</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="">SELECT CITY:</label>
+                        <select name="cityid" id="city"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Pincode</label>
+                        <input type="text" name="pincode" required>
+                    </div>
+
+                </div>
+
+                <button class="btn" type="submit">Save User</button>
+
+            </form>
+        </div>
+    </section>
+
+    <!-- VIEW USERS -->
+
+    <section id="viewUsers">
+        <h2 class="page-title">View Users</h2>
+        <p class="description">All registered users</p>
+
+        <div class="panel">
+            <div class="table-wrapper">
+                <table id="clicktable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Date of Birth</th>
+                            <th>Country</th>
+                            <th>City</th>
+                            <th>Pincode</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablebody">
+        </tbody>
+                    <tbody>
+                        <tr>
+                            <td colspan="7">No users found</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- COUNTRY -->
+
+    <section id="country">
+        <h2 class="page-title">Country Master</h2>
+        <p class="description">Add and manage countries</p>
+
+        <div class="panel">
+            <h3>Add Country</h3>
+
+            <form action="http://localhost:8080/country/postoneval"
+                  method="POST">
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Country Name</label>
+                        <input type="text" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" name="description">
+                    </div>
+                </div>
+
+                <button class="btn" type="submit">Save Country</button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h3>Country List</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Country</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3">No countries found</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- CITY -->
+
+    <section id="city">
+        <h2 class="page-title">City Master</h2>
+        <p class="description">Add and manage cities</p>
+
+        <div class="panel">
+            <h3>Add City</h3>
+
+            <form action="http://localhost:8080/country/SaveCity"
+                  method="POST">
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>City Name</label>
+                        <input type="text" name="name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" name="description">
+                    </div>
+                </div>
+
+                <button class="btn" type="submit">Save City</button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h3>City List</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>City Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="3">No cities found</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- COUNTRY CITY MAPPING -->
+
+    <section id="mapping">
+        <h2 class="page-title">Country City Mapping</h2>
+        <p class="description">Map cities with their respective countries</p>
+
+        <div class="panel">
+            <h3>Create Mapping</h3>
+
+            <form action="http://localhost:8080/country/SaveMapping"
+                  method="POST">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Select Country</label>
+                        <select name="countryid" required>
+                            <option value="">Select Country</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select City</label>
+                        <select name="cityid" required>
+                            <option value="">Select City</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <button class="btn" type="submit">Save Mapping</button>
+            </form>
+        </div>
+
+        <div class="panel">
+            <h3>Mapping List</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Country</th>
+                        <th>City</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td colspan="3">No mappings found</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+</main>
+
+</body>
+<script>
+
+    //POST USER DATAS
+async function countryvalue(params) {
+        let url= "http://127.0.0.1:8080/country/GetAllUserDataFromCountry";
+        let fetch1=await fetch(url);
+        let jsonform=await fetch1.json();
+        console.log(jsonform);
+        
+  let dropdown = document.getElementById("country");
+
+    jsonform.forEach(function(country) {
+         let option = document.createElement("option"); 
+         option.value = country.id;
+         option.textContent = country.country_name  ;
+         let drop=dropdown.appendChild(option);
+    });
+    
+}
+  async function loadcity() {
+    let countryid = document.getElementById("country").value;
+    console.log("Selected Country ID:", countryid);
+    let url = "http://localhost:8080/allcityvalues/getcity?countryid=" + countryid;
+
+    let response = await fetch(url);
+    let jsonfor = await response.json();
+    console.log(jsonfor);
+    let dropdown = document.getElementById("city");
+
+    // Clear previous city values
+     dropdown.innerHTML = "";
+
+    jsonfor.forEach(function(cities) {
+
+        let option = document.createElement("option");
+
+        option.value = cities.id;
+        option.textContent = cities.name;
+
+        dropdown.appendChild(option);
+        
+    });
+}  
+countryvalue();
+
+//VIEW USER DATAS
+ async function getUserData() {
+
+            // Call Spring Boot API
+            let response = await fetch(
+                "http://localhost:8080/country/findOnlyUserDatas"
+            );
+
+            // Convert response into JSON
+            let jsondata = await response.json();
+
+            console.log(jsondata);
+
+            // Get table body
+            let table = document.getElementById("tablebody");
+
+            // Clear old rows
+            table.innerHTML = "";
+
+            // Handle both array and single object
+            let users = Array.isArray(jsondata) ? jsondata : [jsondata];
+
+            // Insert data into table
+            users.forEach(user => {
+
+                let row = document.createElement("tr");
+
+                let td0 = document.createElement("td");
+                td0.innerText = user.id;
+
+                let td1 = document.createElement("td");
+                td1.innerText = user.name;
+
+                let td2 = document.createElement("td");
+                td2.innerText = user.age;
+
+                let td3 = document.createElement("td");
+                td3.innerText = user.dob;
+
+                row.appendChild(td0);
+                row.appendChild(td1);
+                row.appendChild(td2);
+                row.appendChild(td3);
+
+                table.appendChild(row);
+
+            });
+
+        }
+
+
+
+</script>
+</html>
