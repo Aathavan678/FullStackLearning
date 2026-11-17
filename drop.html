@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>dropdown</title>
+</head>
+<body>
+    <h1>DROPDOWN</h1>
+
+    <form >
+        <label for="">select city name:</label>
+        <select value="" id="drop">
+            
+        </select>
+
+    </form>
+</body>
+<script>
+    async function dropdown(params) {
+        let url= "http://localhost:8080/country/GetAllDatas";
+        let fetch1=await fetch(url);
+        let jsonform=await fetch1.json();
+        console.log(jsonform);
+        
+  let dropdown = document.getElementById("drop");
+
+    jsonform.forEach(function(city) {
+
+        let option = document.createElement("option");
+
+        option.value = city.name;
+        option.textContent = city.name;
+
+        dropdown.appendChild(option);
+
+    });
+}
+
+    dropdown();
+</script>
+</html>
